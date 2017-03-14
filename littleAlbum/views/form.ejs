@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>小小相册</title>
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">小小相册</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="/">全部相册 <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="/upload">上传</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div class="container">
+    <!--<form id="addImage_form" method="post" action="/addNewImage" enctype="multipart/form-data">-->
+    <form id="addImage_form">
+        <div class="form-group">
+            <label for="album">选择相册</label>
+            <select class="form-control" name="album" id="album">
+                <% for(var i = 0; i < albums.length; i++){ %>
+                <option value="<%= albums[i] %>"><%= albums[i] %></option>
+                <% } %>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="newImage">选择图片：</label>
+            <input type="file" id="newImage" name="image">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addAlbum">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                新增相册
+            </button>
+        </div>
+
+        <button type="button" id="sub" class="btn btn-success btn-block">提交</button>
+    </form>
+    <div class="modal fade" id="addAlbum" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">新增相册</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="addAlbum_from" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="newAlbum" class="col-sm-3 control-label">相册名称：</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="newAlbum" class="form-control" id="newAlbum">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+    $("#addAlbum .modal-footer .btn-primary").click(function () {
+        $.get("/addNewAlbum?" + $("#addAlbum_from").serialize(), function (ok) {
+            console.log(ok);
+            if (ok.status == 0) {
+                $("#addAlbum").modal('hide');
+                $("#addImage_form select[name='album']").prepend('<option value="' + ok.msg + '">' + ok.msg + '</option>');
+            }
+        })
+    })
+    $("#sub").click(function () {
+        var formData = new FormData($( "#addImage_form" )[0]);
+        $.ajax({
+            url: '/addNewImage' ,
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+                alert(111);
+            },
+            error: function (returndata) {
+                alert(222);
+            }
+        });
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        <!--
+        #dragdiv{
+            background-color:#0A0909;
+            height:200px;
+            width:157px;
+
+            position:absolute;
+        }
+        .ondrag{
+            filter:alpha(opacity=200);
+            cursor:move;
+        }
+        .enddrag{
+            filter:alpha(opacity=100);
+            cursor:default;
+        }
+        #father{
+            width:600px;
+            height:700px;
+            background:#C63535;
+        }
+        .a{
+            width: 100px;
+            height:100px;
+            margin: 100px auto;
+            background: gray;
+            -webkit-animation: move 2s ease-out;
+            -moz-animation: move 2s ease-out;
+            animation: move 2s ease-out;
+        }
+        @keyframes move {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="a"></div>
+<script language="JavaScript">
+    var dragdiv=document.getElementById("dragdiv");
+    var father=document.getElementById("father");
+    var offsetx=0;
+    var offsety=0;
+    var draging=false;
+    function beforeDrag(ev){
+
+        if (!draging) {
+            draging = true;
+            var l = dragdiv.offsetLeft;
+            var t = dragdiv.offsetTop;
+            offsetx = ev.clientX - l;
+            offsety = ev.clientY - t;
+
+        }
+        else {
+            dragdiv.className = "enddrag";
+            dragdiv.removeEventListener("mousemove",onDrag);
+            draging = false;
+            return;
+        }
+
+    }
+    function endDrag(){
+        draging=false;
+        dragdiv.className="enddrag";
+    }
+    function onDrag(ev){
+        if (!draging) {
+            dragdiv.className = "enddrag";
+            return;
+        }
+        else {
+            dragdiv.className = "ondrag";
+
+            dragdiv.style.left = (ev.clientX - offsetx) + "px";
+            dragdiv.style.top = (ev.clientY - offsety) + "px";
+
+        }
+    }
+    dragdiv.addEventListener("mousedown",beforeDrag,true);
+    dragdiv.addEventListener("mousemove",onDrag,false);
+    dragdiv.addEventListener("mouseup",endDrag,true);
+
+</script>
+
+</body>
+</html>

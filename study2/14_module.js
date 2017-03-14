@@ -1,0 +1,10 @@
+var foo = require('./test/foo.js');
+var foo1 = require('foo');
+var People = require('./test/people');
+var bar = require('bar');
+console.log(bar.msg);
+console.log(foo.msg);
+console.log(foo.info);
+console.log(foo1.msg);
+var xiao = new People('xiao','man',26);
+xiao.sayHello();

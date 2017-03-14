@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>guest</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        form { margin-bottom: 20px; }
+
+        .alert { display: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>我的留言本</h1>
+    <form class="col-sm-6">
+        <div class="form-group">
+            <label for="name">姓名</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="name">
+        </div>
+        <div class="form-group">
+            <label for="guest">留言</label>
+            <textarea class="form-control" id="guest" name="guest" placeholder="guest"></textarea>
+        </div>
+        <button type="button" id="sub" class="btn btn-success">提交</button>
+        <div class="alert alert-success" role="alert">表单已经成功提交</div>
+        <div class="alert alert-danger" role="alert">表单提交失败</div>
+    </form>
+    <div class="col-sm-6 guest">
+        <div class="list-group">
+            <!--<a class="list-group-item">-->
+            <!--<h4 class="list-group-item-heading">List group item heading</h4>-->
+            <!--<p class="list-group-item-text">...</p>-->
+            <!--</a>-->
+            <!--<a class="list-group-item">-->
+            <!--<h4 class="list-group-item-heading">List group item heading</h4>-->
+            <!--<p class="list-group-item-text">...</p>-->
+            <!--</a>-->
+            <!--<a class="list-group-item">-->
+            <!--<h4 class="list-group-item-heading">List group item heading</h4>-->
+            <!--<p class="list-group-item-text">...</p>-->
+            <!--</a>-->
+        </div>
+    </div>
+
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+
+    $("#sub").click(function () {
+        $.post('/dopost', {
+            "name": $("#name").val(),
+            "guest": $("#guest").val(),
+            "time": new Date()
+        }, function (result) {
+            if (result.ok == 1) {
+                $(".alert-success").fadeIn();
+            } else {
+                $(".alert-danger").fadeIn();
+            }
+            setTimeout(function () {
+                $(".alert").fadeOut();
+            }, 3000);
+        })
+        guestList();
+    })
+    function guestList() {
+        $('.list-group').html('');
+        $.get('/guestList', function (result) {
+            if (result.ok == 0) {
+                var _list = '';
+                $.each(result.msg, function (k, v) {
+                    _list += '<a class="list-group-item">'
+                            + '<h4 class="list-group-item-heading">' + v.name + ' <span class="pull-right">' + forTime(v.time) + '</span></h4>'
+                            + '<p class="list-group-item-text">' + v.guest + '</p>'
+                            + '</a>'
+                })
+                $('.list-group').append(_list);
+            }
+        })
+    }
+    guestList();
+    function forTime(t) {
+        var time = new Date(t);
+        if(t){
+            return time.getFullYear() + '/' + (time.getMonth() + 1) + '/' + time.getDate() + ' ' + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
+        }else{
+            return '';
+        }
+    }
+</script>
+</body>
+</html>

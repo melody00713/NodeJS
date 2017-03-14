@@ -1,0 +1,81 @@
+{xiao:template header.html}
+<div class="mainbody">
+
+    <div class="dwp">您当前位置：<a  href="{xiao:$site_url}">首页</a> >> {xiao:function.position($catid, ' &gt;&gt;&nbsp;&nbsp;')}</div>
+
+    <div class="wfl">
+        <div class="shpr bg">
+
+            <h2>{xiao:$title}</h2>
+            <div class="pduc"><img src="{xiao:$thumb}" /><p>{xiao:$content}</p></div>
+
+            <main>
+
+                <input id="tab1" type="radio" name="tabs" checked="" style="display: none;">
+                <label for="tab1">产品特点</label>
+
+                <input id="tab2" type="radio" name="tabs" style="display: none;">
+                <label for="tab2">产品参数</label>
+                <script type="text/javascript" src="{xiao:$site_template}js/jquery-1.4.4.min.js"></script>
+                <script type="text/javascript" src="{xiao:$site_template}js/jquery.reveal.js"></script>
+                <label for="tab3"><a style="display:block;text-decoration:none;" href="javascript:void(0);" data-reveal-id="myModal">个性定制</a></label>
+
+                <label for="tab4"><a style="display:block;text-decoration:none;" href="javascript:void(0);" data-reveal-id="myModal">在线留言</a></label>
+
+                <section id="content1">
+                    {xiao:$chanpintedian}
+                </section>
+
+                <section id="content2">
+
+                    {xiao:$chanpincanshu}
+                </section>
+
+            </main>
+
+
+            <div id="myModal" class="reveal-modal">
+                <h2>在线留言</h2>
+                <form action="/index.php?c=index&a=form&modelid=3 " method="post">
+                    <tbody>
+                    <a><span>公司名称：</span><input value="" class="input-text" name="data[gongsimingcheng]" style="width:180px;" type="text"><font color="red">*</font></a>
+                    <a><span>姓名：</span><input value="" class="input-text" name="data[nindexingming]" style="width:180px;" type="text"><font color="red">*</font></a>
+                    <a><span>电话：</span><input value="" class="input-text" name="data[lianxiQQ]" style="width:180px;" type="text"><font color="red">*</font></a>
+                    <a><span>邮箱：</span><input value="" class="input-text" name="data[email]" style="width:180px;" type="text"><font color="red">*</font></a>
+                    <a><span>留言内容：</span><textarea style="width:320px;height:90px;" name="data[liuyanneirong]"></textarea><font color="red">*</font></a>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <td><input class="button" value="提 交" name="submit" type="submit" style="margin-left: 62px;"></td>
+                    </tr>
+                    </tbody>
+                    <a class="close-reveal-modal">×</a>
+            </div>
+
+
+
+
+
+
+
+            <!--文章内容分页 begin-->
+            <div class="listpage" >{xiao:$pagelist}</div>
+            <!--文章内容分页 end-->
+
+        </div>
+
+    </div>
+    <div class="wfr">
+        <div class="fl-nav">
+            <ul>
+
+                {xiao:list catid=5  }
+                <li><a href="{xiao:$xiao['url']}">{xiao:function.strcut($xiao[title],26,'')}</a></li>
+                {/xiao:list}
+
+            </ul>
+        </div>
+        {xiao:template left.html}
+    </div>
+</div>
+
+{xiao:template footer.html}

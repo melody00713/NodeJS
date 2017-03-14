@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="form" name="form" method="post"  onsubmit="return loadXMLDoc(this)">
+    <input type="text" name="name">
+    <input type="text" name="age">
+    <input type="radio" name="gender" value="男">男
+    <input type="radio" name="gender" value="女">女
+    <input type="submit" value="提交">
+</form>
+<div id="myDiv"></div>
+<script src="jquery.min.js"></script>
+<script>
+    function loadXMLDoc(f) {
+//        f.preventDefault();
+        var xmlhttp;
+        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        }
+        else {// code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
+            }
+        }
+        xmlhttp.open("POST", "http://127.0.0.1:3000/dopost", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send($("#form").serialize());
+        return false;
+//        $.post("http://127.0.0.1:3000/dopost",$("#form").serialize()).done(function(data){
+//            console.log(data)
+//        })
+    }
+    //    var arr = [1,2,3,5,6,9,10,2,3,4];
+    //    var arr = [1,4,7,8,13,14,25,2,3,24];
+    //    function arrFun(arr){
+    //        var newArr = [],prev;
+    //        arr.map(function(item,i){
+    //            if(item !== prev+1){
+    //                newArr.push([]);
+    //            }
+    //            newArr[newArr.length-1].push(item);
+    //            prev = item;
+    //        })
+    //        return newArr
+    //    }
+    //    console.log(arrFun(arr));
+
+    //var arr = [1, 2, 3, 5, 6, 9, 10, 2, 3, 4];
+    //var result = arr.reduce(function(result, data) {
+    //    if (result.length === 0) {
+    //        result.push([data]);
+    //    } else {
+    //        var nowArr = result[result.length - 1];
+    //        if (data === nowArr[nowArr.length - 1] + 1) {
+    //            nowArr.push(data);
+    //        } else {
+    //            result.push([data]);
+    //        }
+    //    }
+    //    return result;
+    //}, []);
+    //console.log(result);
+
+    //    let getNew = (arr) => { return arr.map((item,i) => {
+    //            new = [],n;
+    //            if(item+1 !== arr[i+1]){
+    //                n++;
+    //                new[n] = [];
+    //            }
+    //            new[n].push(item);
+    //    return new;
+    //    }   ) }
+    //    console.log(getNew([1, 2, 3, 5, 6, 9, 10, 2, 3, 4]))
+
+</script>
+</body>
+</html>
