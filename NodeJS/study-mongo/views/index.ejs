@@ -8,6 +8,8 @@
         form { margin-bottom: 20px; }
 
         .alert { display: none; }
+        .list-group{ height:253px;}
+        .glyphicon-remove{ color:#000;}
     </style>
 </head>
 <body>
@@ -41,13 +43,31 @@
             <!--<p class="list-group-item-text">...</p>-->
             <!--</a>-->
         </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <!--<li>-->
+                    <!--<a href="#" aria-label="Previous">-->
+                        <!--<span aria-hidden="true">&laquo;</span>-->
+                    <!--</a>-->
+                <!--</li>-->
+                <!--<li class="guest-page active"><a href="javascript:void(0);">1</a></li>-->
+                <!--<li class="guest-page"><a href="javascript:void(0);">2</a></li>-->
+                <!--<li class="guest-page"><a href="javascript:void(0);">3</a></li>-->
+                <!--<li class="guest-page"><a href="javascript:void(0);">4</a></li>-->
+                <!--<li class="guest-page"><a href="javascript:void(0);">5</a></li>-->
+                <!--<li>-->
+                    <!--<a href="#" aria-label="Next">-->
+                        <!--<span aria-hidden="true">&raquo;</span>-->
+                    <!--</a>-->
+                <!--</li>-->
+            </ul>
+        </nav>
     </div>
 
 </div>
 <script src="js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script>
-
     $("#sub").click(function () {
         $.post('/dopost', {
             "name": $("#name").val(),
@@ -63,24 +83,37 @@
                 $(".alert").fadeOut();
             }, 3000);
         })
-        guestList();
+        guestList(0);
+        getPage();
     })
-    function guestList() {
-        $('.list-group').html('');
-        $.get('/guestList', function (result) {
+    function guestList(page) {
+        $.get('/guestList?page='+page, function (result) {
+            $('.list-group').html('');
             if (result.ok == 0) {
                 var _list = '';
                 $.each(result.msg, function (k, v) {
                     _list += '<a class="list-group-item">'
                             + '<h4 class="list-group-item-heading">' + v.name + ' <span class="pull-right">' + forTime(v.time) + '</span></h4>'
-                            + '<p class="list-group-item-text">' + v.guest + '</p>'
-                            + '</a>'
+                            + '<p class="list-group-item-text">' + v.guest + '<span data-id="'+ v._id+'" class="pull-right glyphicon glyphicon-remove"></span></p>'
+                            + '</a>';
                 })
                 $('.list-group').append(_list);
             }
         })
     }
-    guestList();
+    function getPage(){
+        $.get('/page', function (result) {
+            $(".pagination").html('');
+            var lis = '<li><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+            for(var i = 0;i<result.page;i++){
+                lis += '<li class="guest-page '+(i==0?'active':'')+'"><a href="javascript:void(0);">'+(i+1)+'</a></li>';
+            }
+            lis += '<li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
+            $(".pagination").append(lis);
+        })
+    }
+    getPage();
+    guestList(0);
     function forTime(t) {
         var time = new Date(t);
         if(t){
@@ -89,6 +122,26 @@
             return '';
         }
     }
+
+    $(".pagination").on('click','.guest-page',function () {
+        var page  = $(this).addClass('active').siblings().removeClass('active').end().find('a').text();
+        guestList(page-1);
+    });
+    $(".pagination").on('click','a[aria-label=Next]',function () {
+        $('.pagination').find('li.active').next().trigger('click');
+    });
+    $(".pagination").on('click','a[aria-label=Previous]',function () {
+        $('.pagination').find('li.active').prev().trigger('click');
+    });
+    $(".list-group").on('click','.glyphicon-remove', function () {
+        var _self = $(this);
+        $.get('/remove?id='+$(this).data('id'), function (result) {
+            if(result.n == 1){
+                guestList(0);
+                getPage();
+            }
+        })
+    })
 </script>
 </body>
 </html>

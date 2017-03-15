@@ -55,5 +55,13 @@ module.exports = {
               callback(err,result);
            });
         });
+    },
+    //获取页数
+    page: function (collectionName,callback) {
+        _connectDB(function (err,db) {
+            db.collection(collectionName).find().count(function (err,n) {
+               callback(err,n);
+            });
+        });
     }
 };
